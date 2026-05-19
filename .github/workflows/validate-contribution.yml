@@ -1,0 +1,76 @@
+name: Validate Skill Contribution
+
+on:
+  pull_request:
+    types: [opened, edited, synchronized]
+    paths:
+      - 'README.md'
+
+jobs:
+  validate:
+    name: Verify PR Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Check PR Title Format
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ ! "$PR_TITLE" =~ ^Add\ skill:\ [a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+$ ]]; then
+            echo "::error title=Invalid PR Title::PR Title must strictly follow the format: 'Add skill: author/skill-name'"
+            exit 1
+          fi
+          echo "✅ PR Title format is valid."
+
+      - name: Isolate Added Lines in README.md
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD -- README.md | grep '^[+][ ]*-' > added_lines.txt || true
+
+      - name: Validate Markdown Format & Word Count
+        run: |
+          python -c "
+          import re
+          import sys
+
+          pattern = re.compile(r'^\+\s*-\s*\*\*\[([^\]]+)\]\(([^)]+)\)\*\*\s*-\s*(.*)$')
+          has_errors = False
+
+          try:
+              with open('added_lines.txt', 'r') as f:
+                  lines = f.readlines()
+          except FileNotFoundError:
+              print('No new skill additions detected in markdown format.')
+              sys.exit(0)
+
+          for line in lines:
+              line = line.strip()
+              match = pattern.match(line)
+              
+              if not match:
+                  print(f'::error title=Invalid Format::Line does not follow entry format guidelines: {line[1:]}')
+                  has_errors = True
+                  continue
+              
+              author_skill, repo_url, description = match.groups()
+              word_count = len(description.split())
+              
+              if word_count > 10:
+                  print(f'::error title=Description Too Long::\" {author_skill} \" has {word_count} words. Max allowed is 10 words.')
+                  has_errors = True
+              else:
+                  print(f'✅ Validated entry for \"{author_skill}\" ({word_count} words).')
+
+          if has_errors:
+              print('\n❌ Validation failed. Please fix the formatting errors listed above.')
+              sys.exit(1)
+          else:
+              print('\nAll added skills are perfectly formatted!')
+          "
