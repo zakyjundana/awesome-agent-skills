@@ -10,3 +10,4 @@ Add your skill to the end of the relevant category in `README.md`:
 
 ```markdown
 - **[author/skill-name](https://github.com/author/repo/path)** - Short description of what it does
+```

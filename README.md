@@ -17,6 +17,7 @@ Each skill lives in its own repository. To contribute a mature, working skill, p
 
 ### Marketing
 * *Example:* **[acme/promo-gen](https://github.com/acme/promo-gen)** - Generates high-converting marketing copy for feature launches.
+- **[Xquik-dev/tweetclaw](https://github.com/Xquik-dev/tweetclaw/tree/master/skills/tweetclaw)** - X/Twitter scraping, search, posting, replies, followers, and media.
 
 ### Productivity and Collaboration
 * *Example:* **[collab-io/slack-sync](https://github.com/collab-io/slack-sync)** - Syncs daily standup notes automatically to Slack channels.
