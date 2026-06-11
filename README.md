@@ -29,6 +29,7 @@ Each skill lives in its own repository. To contribute a mature, working skill, p
 
 ### AI and Data
 * *Example:* **[data-viz/query-bot](https://github.com/data-viz/query-bot)** - Translates natural language into optimized SQL queries.
+- **[Xquik-dev/tweetclaw](https://github.com/Xquik-dev/tweetclaw/tree/master/skills/tweetclaw)** - Scrape tweets, search replies, post, monitor, manage media.
 
 ### n8n Automation
 * *Example:* **[workflow-pro/n8n-nodes](https://github.com/workflow-pro/n8n-nodes)** - Custom nodes for triggered AI agent pipelines.
